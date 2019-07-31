@@ -1,4 +1,4 @@
-#! /usr/bin/env python
+#! /usr/bin/env python2
 
 from os import path
 from multiprocessing.pool import ThreadPool
@@ -165,15 +165,6 @@ def tally_result(result):
   elif "UNKNOWN" in result:
     unknowns += 1
 
-def regtest_clean():
-  for fn in os.listdir('.'):
-    if fn.endswith('.bc') or fn.endswith('.bpl'):
-      try:
-        os.remove(fn)
-      except:
-        pass
-
-
 def main():
   """
   Main entry point for the test suite.
@@ -195,12 +186,7 @@ def main():
                       help="sets the logging level (DEBUG, INFO, WARNING)")
   parser.add_argument("--output-log", action="store", dest="log_path", type=str,
                       help="sets the output log path. (std out by default)")
-  parser.add_argument("--clean", help="Remove files created by regtest", action="store_true")
   args = parser.parse_args()
-
-  if args.clean:
-    regtest_clean()
-    sys.exit(0)
 
   if args.exhaustive:
     args.all_examples = True;
@@ -232,7 +218,7 @@ def main():
 
     # start processing the tests.
     results = []
-    for test in sorted(glob.glob("./" + args.folder + "/*.rs")):
+    for test in sorted(glob.glob("./" + args.folder + "/*.c")):
       # get the meta data for this test
       meta = metadata(test)
 
@@ -286,7 +272,7 @@ def main():
   logging.info(' FAILED count: %d' % failed)
   logging.info(' TIMEOUT count: %d' % timeouts)
   logging.info(' UNKNOWN count: %d' % unknowns)
-  regtest_clean()
+
   # if there are any failed tests or tests that timed out, set the system
   # exit code to a failure status
   if timeouts > 0 or failed > 0 or unknowns > 0:
