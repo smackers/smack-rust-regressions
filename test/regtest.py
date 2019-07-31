@@ -218,7 +218,7 @@ def main():
 
     # start processing the tests.
     results = []
-    for test in sorted(glob.glob("./" + args.folder + "/*.c")):
+    for test in sorted(glob.glob("./" + args.folder + "/*.rs")):
       # get the meta data for this test
       meta = metadata(test)
 
